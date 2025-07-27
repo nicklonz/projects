@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prime Time!</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #111;
+      color: #0f0;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      color: #0ff;
+    }
+
+    button {
+      background-color: #0f0;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    #output {
+      max-width: 800px;
+      margin: auto;
+      white-space: pre-wrap;
+      font-size: 1.2em;
+      background-color: #000;
+      border: 1px solid #0f0;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    button:hover {
+      background-color: #0c0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Prime Time!</h1>
+  <p>Click the button to see all prime numbers from 1 to 1000.</p>
+  <button onclick="generatePrimes()">Show Me the Primes</button>
+
+  <div id="output"></div>
+
+  <script>
+    function isPrime(n) {
+      if (n < 2) return false;
+      for (let i = 2; i <= Math.sqrt(n); i++) {
+        if (n % i === 0) return false;
+      }
+      return true;
+    }
+
+    function generatePrimes() {
+      const output = document.getElementById('output');
+      let primes = [];
+      for (let i = 1; i <= 1000; i++) {
+        if (isPrime(i)) {
+          primes.push(i);
+        }
+      }
+      output.textContent = primes.join(', ');
+    }
+  </script>
+
+</body>
+</html>

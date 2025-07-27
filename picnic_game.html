@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Picnic Pick-Off!</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: #fdf6e3;
+      text-align: center;
+      padding: 40px;
+      background-image: url('https://www.transparenttextures.com/patterns/picnic.png');
+    }
+    h1 {
+      color: #d35400;
+      font-size: 3em;
+    }
+    .game-area {
+      margin-top: 30px;
+    }
+    button {
+      font-size: 1.5em;
+      padding: 15px 30px;
+      margin: 10px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      background-color: #ffcc66;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #ffa94d;
+    }
+    .scoreboard {
+      font-size: 1.2em;
+      margin-top: 20px;
+    }
+    .turn {
+      font-weight: bold;
+      color: #2980b9;
+    }
+    .result {
+      font-size: 1.3em;
+      margin-top: 20px;
+      color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌞 Picnic Pick-Off! 🌭🍔</h1>
+
+  <div class="game-area">
+    <p class="turn" id="turn">Player 1's Turn</p>
+    <button onclick="makeGuess('hamburger')">🍔 Hamburger</button>
+    <button onclick="makeGuess('hotdog')">🌭 Hot Dog</button>
+    <p class="result" id="result"></p>
+    <div class="scoreboard">
+      <p>Player 1 Score: <span id="score1">0</span></p>
+      <p>Player 2 Score: <span id="score2">0</span></p>
+    </div>
+  </div>
+
+  <script>
+    let currentPlayer = 1;
+    let scores = [0, 0];
+
+    function makeGuess(choice) {
+      const systemChoice = Math.random() < 0.5 ? 'hamburger' : 'hotdog';
+      const resultText = document.getElementById('result');
+
+      if (choice === systemChoice) {
+        scores[currentPlayer - 1]++;
+        resultText.innerText = `Correct! It was a ${systemChoice === 'hamburger' ? '🍔 Hamburger' : '🌭 Hot Dog'}!`;
+      } else {
+        resultText.innerText = `Oops! It was a ${systemChoice === 'hamburger' ? '🍔 Hamburger' : '🌭 Hot Dog'}!`;
+      }
+
+      document.getElementById('score1').innerText = scores[0];
+      document.getElementById('score2').innerText = scores[1];
+
+      if (scores[currentPlayer - 1] === 3) {
+        document.getElementById('turn').innerText = `🎉 Player ${currentPlayer} Wins the Picnic Pick-Off! 🎉`;
+        document.querySelectorAll("button").forEach(btn => btn.disabled = true);
+        return;
+      }
+
+      currentPlayer = currentPlayer === 1 ? 2 : 1;
+      document.getElementById('turn').innerText = `Player ${currentPlayer}'s Turn`;
+    }
+  </script>
+</body>
+</html>

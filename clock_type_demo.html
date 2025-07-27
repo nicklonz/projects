@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Five-Minute Frenzy</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fdf6e3;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    #timer {
+      font-size: 3em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      background-color: #ecf0f1;
+      width: 260px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    #warning {
+      font-size: 1.2em;
+      color: #c0392b;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    textarea {
+      width: 90%;
+      max-width: 800px;
+      height: 300px;
+      padding: 15px;
+      font-size: 1em;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      resize: none;
+      background: #fffaf0;
+    }
+
+    #wordCount {
+      margin-top: 10px;
+      font-size: 1.1em;
+      color: #2980b9;
+    }
+
+    .highlight {
+      background-color: #ffeaa7;
+      padding: 5px 10px;
+      border-radius: 5px;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { background-color: #ffeaa7; }
+      50% { background-color: #fab1a0; }
+      100% { background-color: #ffeaa7; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📝 Five-Minute Frenzy</h1>
+  <div id="timer">300.000</div>
+  <div id="warning">⚠️ <span class="highlight">Only one minute left! Push through!</span></div>
+  <textarea id="writingBox" placeholder="Start typing..."></textarea>
+  <div id="wordCount">Word count: 0</div>
+
+  <script>
+    const timerDisplay = document.getElementById('timer');
+    const writingBox = document.getElementById('writingBox');
+    const wordCountDisplay = document.getElementById('wordCount');
+    const warning = document.getElementById('warning');
+
+    let timeLeft = 300000; // 300 seconds in milliseconds
+
+    const interval = setInterval(() => {
+      timeLeft -= 1;
+
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        timerDisplay.textContent = "0.000";
+        writingBox.disabled = true;
+        warning.innerHTML = "⏰ Time's up!";
+        warning.style.display = 'block';
+        return;
+      }
+
+      const secondsLeft = (timeLeft / 1000).toFixed(3);
+      timerDisplay.textContent = secondsLeft;
+
+      if (timeLeft <= 60000 && !warning.classList.contains('shown')) {
+        warning.style.display = 'block';
+        warning.classList.add('shown');
+      }
+    }, 1); // updates every 1 ms
+
+    writingBox.addEventListener('input', () => {
+      const words = writingBox.value.trim().split(/\s+/).filter(Boolean);
+      wordCountDisplay.textContent = `Word count: ${words.length}`;
+    });
+  </script>
+</body>
+</html>

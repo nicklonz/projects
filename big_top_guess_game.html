@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🎪 Big Top Guess!</title>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #ffcc00, #ff6666);
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+    }
+
+    h1 {
+      font-size: 3em;
+      text-shadow: 2px 2px #cc0000;
+    }
+
+    .game-container {
+      background-color: rgba(255, 0, 0, 0.8);
+      border: 5px dashed white;
+      padding: 30px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    input[type="number"] {
+      font-size: 1.5em;
+      padding: 10px;
+      width: 60px;
+      text-align: center;
+      border: 3px solid white;
+      border-radius: 10px;
+    }
+
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      background-color: #ffffff;
+      color: #cc0000;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    #result, #probability, #guesses-left {
+      font-size: 1.2em;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎪 Big Top Guess!</h1>
+  <div class="game-container">
+    <p>Step right up! Guess the number from <strong>1 to 10</strong>!</p>
+    <p>You have <strong>3 chances</strong> to win the prize! 🎁</p>
+    <input type="number" id="userGuess" min="1" max="10">
+    <br>
+    <button onclick="makeGuess()">Take a Guess!</button>
+    <div id="result"></div>
+    <div id="probability"></div>
+    <div id="guesses-left"></div>
+  </div>
+
+  <script>
+    const answer = Math.floor(Math.random() * 10) + 1;
+    let attempts = 0;
+    let maxAttempts = 3;
+    let guessedNumbers = [];
+
+    function makeGuess() {
+      const userGuess = parseInt(document.getElementById('userGuess').value);
+      const result = document.getElementById('result');
+      const probability = document.getElementById('probability');
+      const guessesLeft = document.getElementById('guesses-left');
+
+      if (userGuess < 1 || userGuess > 10 || isNaN(userGuess)) {
+        result.innerText = "🎈 Pick a number from 1 to 10!";
+        return;
+      }
+
+      if (guessedNumbers.includes(userGuess)) {
+        result.innerText = "🎪 You already tried that number!";
+        return;
+      }
+
+      guessedNumbers.push(userGuess);
+      attempts++;
+
+      const remainingOptions = 10 - guessedNumbers.length;
+      const currentProbability = (1 / remainingOptions * 100).toFixed(2);
+
+      if (userGuess === answer) {
+        result.innerText = "🎉 Hooray! You guessed the magic number!";
+        probability.innerText = "";
+        guessesLeft.innerText = "";
+      } else if (attempts < maxAttempts) {
+        result.innerText = `🎠 Nope! Try again.`;
+        probability.innerText = `🎯 New Probability: 1 in ${remainingOptions} (${currentProbability}%)`;
+        guessesLeft.innerText = `🎟️ Guesses Left: ${maxAttempts - attempts}`;
+      } else {
+        result.innerText = `😢 No more chances! The number was ${answer}.`;
+        probability.innerText = "";
+        guessesLeft.innerText = "";
+      }
+    }
+  </script>
+</body>
+</html>

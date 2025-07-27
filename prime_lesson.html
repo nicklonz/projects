@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🎯 Prime Checker Meter</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #111;
+      color: #0f0;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #0ff;
+      font-size: 2.5em;
+    }
+
+    input {
+      font-size: 1.5em;
+      padding: 10px;
+      width: 180px;
+      margin: 10px;
+      text-align: center;
+    }
+
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      background-color: #0f0;
+      color: #000;
+      border: none;
+      cursor: pointer;
+    }
+
+    .meter {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .step {
+      width: 50px;
+      height: 50px;
+      border-radius: 6px;
+      line-height: 50px;
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #555;
+      transition: 0.3s;
+      font-size: 1.2em;
+    }
+
+    .checking {
+      background-color: yellow;
+      color: black;
+    }
+
+    .not-divisible {
+      background-color: #0f0;
+      color: black;
+    }
+
+    .divisible {
+      background-color: red;
+      color: white;
+    }
+
+    #result {
+      font-size: 1.8em;
+      margin-top: 30px;
+    }
+
+    #explanation {
+      max-width: 800px;
+      margin: 20px auto 10px;
+      font-size: 1.2em;
+      color: #0ff;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎯 Prime Checker Meter</h1>
+  <p>Enter a number and watch how we check if it's prime step by step!</p>
+
+  <input type="number" id="numberInput" min="2" placeholder="Enter a number" />
+  <br>
+  <button onclick="startPrimeCheck()">Check Prime</button>
+
+  <div id="explanation"></div>
+  <div class="meter" id="meter"></div>
+  <div id="result"></div>
+
+  <script>
+    async function startPrimeCheck() {
+      const numberInput = document.getElementById('numberInput');
+      const meter = document.getElementById('meter');
+      const result = document.getElementById('result');
+      const explanation = document.getElementById('explanation');
+
+      const n = parseInt(numberInput.value);
+      meter.innerHTML = '';
+      result.textContent = '';
+      explanation.textContent = '';
+
+      if (isNaN(n) || n < 2) {
+        result.textContent = '❗ Please enter a number 2 or higher.';
+        return;
+      }
+
+      const sqrt = Math.floor(Math.sqrt(n));
+      explanation.textContent =
+        `💡 To check if ${n} is prime, we only need to test numbers from 2 up to √${n} ≈ ${sqrt}.\n` +
+        `Why? Because if ${n} had a factor greater than ${sqrt}, it would already have a matching smaller factor before that.\n\n` +
+        `So let's test from 2 to ${sqrt}...`;
+
+      let isPrime = true;
+
+      // Build and display the checking meter
+      for (let i = 2; i <= sqrt; i++) {
+        const step = document.createElement('div');
+        step.classList.add('step');
+        step.textContent = i;
+        meter.appendChild(step);
+      }
+
+      const steps = meter.querySelectorAll('.step');
+
+      for (let i = 2; i <= sqrt; i++) {
+        const index = i - 2;
+        const box = steps[index];
+
+        box.classList.add('checking');
+        await new Promise(r => setTimeout(r, 500)); // pause to show animation
+
+        if (n % i === 0) {
+          box.classList.remove('checking');
+          box.classList.add('divisible');
+          result.textContent = `❌ ${n} is NOT a prime number (divisible by ${i}).`;
+          isPrime = false;
+          return;
+        } else {
+          box.classList.remove('checking');
+          box.classList.add('not-divisible');
+        }
+      }
+
+      result.textContent = `✅ ${n} is a PRIME number!`;
+    }
+  </script>
+
+</body>
+</html>

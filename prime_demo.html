@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🎯 Prime Checker Meter</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #111;
+      color: #0f0;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #0ff;
+      font-size: 2.5em;
+    }
+
+    input {
+      font-size: 1.5em;
+      padding: 10px;
+      width: 100px;
+      margin: 10px;
+      text-align: center;
+    }
+
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      background-color: #0f0;
+      color: #000;
+      border: none;
+      cursor: pointer;
+    }
+
+    .meter {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .step {
+      width: 40px;
+      height: 40px;
+      border-radius: 5px;
+      line-height: 40px;
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #555;
+      transition: 0.3s;
+    }
+
+    .checking {
+      background-color: #ff0;
+      color: #000;
+    }
+
+    .not-divisible {
+      background-color: #0f0;
+      color: #000;
+    }
+
+    .divisible {
+      background-color: red;
+      color: #fff;
+    }
+
+    #result {
+      font-size: 1.8em;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎯 Prime Checker Meter</h1>
+  <p>Enter a number and see the math happen visually!</p>
+
+  <input type="number" id="numberInput" min="2" placeholder="Enter #" />
+  <button onclick="startPrimeCheck()">Check Prime</button>
+
+  <div class="meter" id="meter"></div>
+  <div id="result"></div>
+
+  <script>
+    async function start

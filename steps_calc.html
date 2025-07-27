@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step to Distance Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #3498db;
+        }
+        .result {
+            font-size: 1.2em;
+            margin-top: 15px;
+        }
+        .input-box {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Step to Distance Converter</h1>
+        <p>Convert your smartwatch step count into various distance units!</p>
+        <div class="input-box">
+            <label for="steps">Enter steps (e.g., 1000):</label>
+            <input type="number" id="steps" value="1000" />
+        </div>
+        <button onclick="convertSteps()">Convert</button>
+        <div class="result">
+            <p><strong>Example Conversion (1000 steps):</strong></p>
+            <p id="miles"></p>
+            <p id="feet"></p>
+            <p id="furlongs"></p>
+            <p id="yards"></p>
+            <p id="inches"></p>
+        </div>
+    </div>
+
+    <script>
+        // Function to format numbers with commas
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function convertSteps() {
+            var steps = document.getElementById("steps").value;
+            
+            // Average length of a step in feet (rough estimate, can be adjusted)
+            var stepLengthFeet = 2.5; // this can vary depending on the person
+
+            // Calculations
+            var miles = (steps * stepLengthFeet) / 5280;
+            var feet = steps * stepLengthFeet;
+            var furlongs = miles / 0.125;
+            var yards = feet / 3;
+            var inches = feet * 12;
+
+            // Display results with commas
+            document.getElementById("miles").innerText = `Miles: ${formatNumber(miles.toFixed(2))} miles`;
+            document.getElementById("feet").innerText = `Feet: ${formatNumber(feet.toFixed(2))} feet`;
+            document.getElementById("furlongs").innerText = `Furlongs: ${formatNumber(furlongs.toFixed(2))} furlongs`;
+            document.getElementById("yards").innerText = `Yards: ${formatNumber(yards.toFixed(2))} yards`;
+            document.getElementById("inches").innerText = `Inches: ${formatNumber(inches.toFixed(2))} inches`;
+        }
+
+        // Initialize the display with default value of 1000 steps
+        convertSteps();
+    </script>
+</body>
+</html>

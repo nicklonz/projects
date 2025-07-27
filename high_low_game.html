@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>High Noon Numbers Showdown!</title>
+  <style>
+    body {
+      background: #f4e2d8;
+      font-family: 'Courier New', Courier, monospace;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: saddlebrown;
+      font-size: 2.5em;
+      text-shadow: 2px 2px #daa520;
+    }
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: peru;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: white;
+    }
+    button:hover {
+      background-color: goldenrod;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.4em;
+      color: darkgreen;
+    }
+    #scoreboard {
+      margin-top: 30px;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>🤠 High Noon Numbers Showdown!</h1>
+  <p>Pick High (6–10) or Low (1–5). Get 7 out of 10 right to win the showdown!</p>
+  
+  <button onclick="makeGuess('high')">High</button>
+  <button onclick="makeGuess('low')">Low</button>
+
+  <div id="result"></div>
+  <div id="scoreboard">
+    Rounds Played: <span id="rounds">0</span><br>
+    Correct Guesses: <span id="correct">0</span><br>
+    Status: <span id="status">Keep Guessin', Cowboy!</span>
+  </div>
+
+  <script>
+    let rounds = 0;
+    let correct = 0;
+
+    function makeGuess(playerGuess) {
+      if (rounds >= 10) return;
+
+      let number = Math.floor(Math.random() * 10) + 1;
+      let actual = (number <= 5) ? 'low' : 'high';
+
+      let isCorrect = playerGuess === actual;
+      rounds++;
+      if (isCorrect) correct++;
+
+      document.getElementById('result').textContent = 
+        `You guessed ${playerGuess.toUpperCase()}... Number was ${number}. ${isCorrect ? '🎯 Hit!' : '💥 Missed!'}`;
+
+      document.getElementById('rounds').textContent = rounds;
+      document.getElementById('correct').textContent = correct;
+
+      if (rounds === 10) {
+        let win = correct >= 7;
+        document.getElementById('status').textContent = 
+          win ? "🏆 You Win the Showdown, Sheriff!" : "😢 You Lost. Try Again, Partner!";
+      }
+    }
+  </script>
+</body>
+</html>

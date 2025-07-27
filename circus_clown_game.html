@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clown's Balloon Bonanza!</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: radial-gradient(circle, #fff8dc, #fdd);
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #e60000;
+      margin-bottom: 10px;
+    }
+
+    .doors {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+
+    .door {
+      width: 100px;
+      height: 150px;
+      margin: 10px;
+      border: 5px solid #a52a2a;
+      background-color: #ffcc00;
+      cursor: pointer;
+      position: relative;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .balloon {
+      width: 60px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 20px auto 0;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .guess-panel {
+      margin-top: 30px;
+    }
+
+    .guess-panel input[type="checkbox"] {
+      transform: scale(1.5);
+      margin: 0 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>🎪 Clown's Balloon Bonanza! 🎈</h1>
+  <p>Peek behind 3 doors, then guess which 3 hide matching balloons!</p>
+
+  <div class="doors" id="doorContainer">
+    <!-- Doors will be generated here -->
+  </div>
+
+  <div id="message"></div>
+
+  <div class="guess-panel hidden" id="guessPanel">
+    <p>Now guess the 3 doors with matching balloons:</p>
+    <label><input type="checkbox" value="0"> Door 1</label>
+    <label><input type="checkbox" value="1"> Door 2</label>
+    <label><input type="checkbox" value="2"> Door 3</label>
+    <label><input type="checkbox" value="3"> Door 4</label>
+    <label><input type="checkbox" value="4"> Door 5</label>
+    <br>
+    <button onclick="submitGuess()">Submit Guess</button>
+  </div>
+
+  <script>
+    const balloonColors = ["red", "blue", "green", "yellow", "purple"];
+    let balloonAssignments = [];
+    let peekCount = 0;
+    const maxPeeks = 3;
+
+    function setupGame() {
+      const doorContainer = document.getElementById("doorContainer");
+      doorContainer.innerHTML = '';
+      balloonAssignments = generateBalloons();
+      peekCount = 0;
+      document.getElementById("message").textContent = '';
+      document.getElementById("guessPanel").classList.add("hidden");
+
+      for (let i = 0; i < 5; i++) {
+        const door = document.createElement("div");
+        door.className = "door";
+        door.textContent = `Door ${i + 1}`;
+        door.dataset.index = i;
+        door.onclick = () => peekDoor(i);
+        doorContainer.appendChild(door);
+      }
+    }
+
+    function generateBalloons() {
+      // Randomly pick a color to be the triplet
+      const matchingColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+      const otherColors = balloonColors.filter(c => c !== matchingColor);
+      const balloonArray = new Array(5);
+
+      // Randomly assign 3 doors to matchingColor
+      const indices = [0, 1, 2, 3, 4].sort(() => 0.5 - Math.random()).slice(0, 3);
+      indices.forEach(i => balloonArray[i] = matchingColor);
+
+      // Assign remaining 2 to random different colors
+      for (let i = 0; i < 5; i++) {
+        if (!balloonArray[i]) {
+          balloonArray[i] = otherColors[Math.floor(Math.random() * otherColors.length)];
+        }
+      }
+
+      return balloonArray;
+    }
+
+    function peekDoor(index) {
+      if (peekCount >= maxPeeks) return;
+
+      const door = document.querySelectorAll('.door')[index];
+      const balloon = document.createElement("div");
+      balloon.className = "balloon";
+      balloon.style.backgroundColor = balloonAssignments[index];
+      door.appendChild(balloon);
+
+      peekCount++;
+      if (peekCount === maxPeeks) {
+        document.getElementById("message").textContent = "Now guess the 3 matching-color doors!";
+        document.getElementById("guessPanel").classList.remove("hidden");
+      }
+
+      // Hide balloon again after short delay
+      setTimeout(() => {
+        if (door.contains(balloon)) {
+          door.removeChild(balloon);
+        }
+      }, 1000);
+    }
+
+    function submitGuess() {
+      const checked = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => parseInt(cb.value));
+      if (checked.length !== 3) {
+        alert("Please select exactly 3 doors.");
+        return;
+      }
+
+      const colors = checked.map(i => balloonAssignments[i]);
+      const firstColor = colors[0];
+      const isCorrect = colors.every(color => color === firstColor);
+
+      const msg = isCorrect ? "🎉 Correct! You're a balloon-guessing champ! 🎈" : "😢 Oops! Not quite. Try again!";
+      document.getElementById("message").textContent = msg;
+      document.getElementById("guessPanel").classList.add("hidden");
+
+      setTimeout(setupGame, 3000);
+    }
+
+    // Start the game
+    setupGame();
+  </script>
+</body>
+</html>
