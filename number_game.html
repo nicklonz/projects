@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Number Wizard's Secret Spell!</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      text-align: center;
+      background-color: #fdf6e3;
+      padding: 30px;
+    }
+    h1 {
+      color: #6b4c9a;
+    }
+    button {
+      background-color: #8e44ad;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      font-size: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .results {
+      margin-top: 30px;
+      font-size: 18px;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      border: 2px dashed #8e44ad;
+      display: inline-block;
+      text-align: left;
+      max-width: 700px;
+    }
+    .explanation {
+      font-size: 16px;
+      text-align: left;
+      margin: 0 auto;
+      background: #fffbe7;
+      padding: 20px;
+      border: 2px solid #f39c12;
+      border-radius: 10px;
+      max-width: 700px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧙‍♂️ Number Wizard's Secret Spell!</h1>
+  <p>Click the magic button to cast a secret math spell using numbers!</p>
+  <button onclick="castSpell()">✨ Cast the Spell ✨</button>
+  
+  <div class="explanation">
+    <h2>📝 How the Magic Works:</h2>
+    <ol>
+      <li><strong>Step 1:</strong> The Wizard picks <strong>5 unique random numbers</strong> between 1 and 10! 🎲</li>
+      <li><strong>Step 2:</strong> He looks closely and removes the <strong>even numbers</strong> ❌ and keeps the <strong>odd ones</strong> ✅</li>
+      <li><strong>Step 3:</strong> He takes the odd numbers and <strong>squares them</strong> (multiplies each by itself)! 🧮</li>
+      <li><strong>Step 4:</strong> He adds up the magic squares to create the <strong>final spell power</strong>! ✨</li>
+    </ol>
+    <p>Let's see what spell YOU create!</p>
+  </div>
+
+  <div class="results" id="resultArea"></div>
+
+  <script>
+    function castSpell() {
+      // Step 1: Create an array of numbers 1 to 10
+      const fullSet = [...Array(10)].map((_, i) => i + 1);
+
+      // Shuffle the array using Fisher-Yates algorithm
+      for (let i = fullSet.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [fullSet[i], fullSet[j]] = [fullSet[j], fullSet[i]];
+      }
+
+      // Pick the first 5 unique numbers
+      const numbers = fullSet.slice(0, 5);
+
+      // Step 2: Filter even and odd numbers
+      const evens = numbers.filter(n => n % 2 === 0);
+      const odds = numbers.filter(n => n % 2 !== 0);
+
+      // Step 3: Square the odd numbers
+      const squared = odds.map(n => n * n);
+
+      // Step 4: Sum the squared numbers
+      const sum = squared.reduce((a, b) => a + b, 0);
+
+      // Display results
+      document.getElementById('resultArea').innerHTML = `
+        <h2>🔍 Magic Spell Steps:</h2>
+
+        <p><strong>Step 1 – Random Numbers:</strong><br>
+        The Wizard picked: <span style="color: #2980b9;">${numbers.join(', ')}</span></p>
+
+        <p><strong>Step 2 – Sorting the Numbers:</strong><br>
+        ❌ He tossed out the even ones: <span style="color: #c0392b;">${evens.join(', ') || 'None'}</span><br>
+        ✅ He kept the odd ones: <span style="color: #27ae60;">${odds.join(', ') || 'None'}</span></p>
+
+        <p><strong>Step 3 – Squaring the Odd Numbers:</strong><br>
+        The magic squares became: <span style="color: #8e44ad;">${squared.join(', ') || 'None'}</span></p>
+
+        <p><strong>Step 4 – Final Magic Sum:</strong><br>
+        The total spell power is: 
+        <span style="font-size: 26px; color: #d35400;"><strong>${sum}</strong></span></p>
+      `;
+    }
+  </script>
+</body>
+</html>
+
