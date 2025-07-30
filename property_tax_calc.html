@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RatioRevamp: Property Assessment Adjuster</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+      text-align: center;
+    }
+    .calculator {
+      max-width: 400px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1a252f;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background: #ecf0f1;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>RatioRevamp: Property Assessment Adjuster</h1>
+  <div class="calculator">
+    <label for="value">Current Property Value ($):</label>
+    <input type="number" id="value" placeholder="e.g., 500000" />
+
+    <label for="ratio">Municipal Ratio:</label>
+    <input type="number" id="ratio" step="0.01" placeholder="e.g., 0.8" />
+
+    <button onclick="calculateAssessment()">Calculate</button>
+    <button onclick="downloadPDF()">Download Report</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    let lastResults = null;
+
+    function calculateAssessment() {
+      const value = parseFloat(document.getElementById('value').value);
+      const ratio = parseFloat(document.getElementById('ratio').value);
+
+      if (isNaN(value) || isNaN(ratio) || ratio === 0) {
+        document.getElementById('result').innerHTML = "Please enter valid numbers.";
+        lastResults = null;
+        return;
+      }
+
+      const assessedValue = value / ratio;
+      const lowerBand = assessedValue * 0.85;
+      const upperBand = assessedValue * 1.15;
+
+      lastResults = {
+        value,
+        ratio,
+        assessedValue,
+        lowerBand,
+        upperBand
+      };
+
+      document.getElementById('result').innerHTML = `
+        <strong>Adjusted Assessed Value:</strong> $${assessedValue.toLocaleString()}<br>
+        <strong>Lower Band (-15%):</strong> $${lowerBand.toLocaleString()}<br>
+        <strong>Upper Band (+15%):</strong> $${upperBand.toLocaleString()}
+      `;
+    }
+
+    function downloadPDF() {
+      if (!lastResults) {
+        alert("Please calculate the assessment first.");
+        return;
+      }
+
+      const { value, ratio, assessedValue, lowerBand, upperBand } = lastResults;
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(16);
+      doc.text("RatioRevamp: Property Assessment Report", 20, 20);
+
+      doc.setFontSize(12);
+      doc.text(`Property Value: $${value.toLocaleString()}`, 20, 40);
+      doc.text(`Assessment Ratio: ${ratio}`, 20, 50);
+      doc.text(`Adjusted Assessed Value: $${assessedValue.toLocaleString()}`, 20, 60);
+      doc.text(`Lower Band (-15%): $${lowerBand.toLocaleString()}`, 20, 70);
+      doc.text(`Upper Band (+15%): $${upperBand.toLocaleString()}`, 20, 80);
+
+      doc.save("RatioRevamp_Report.pdf");
+    }
+  </script>
+</body>
+</html>
