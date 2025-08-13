@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 Cool Conversion: Fahrenheit ➡ Celsius 🔥</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to right, #ff7e5f, #feb47b);
+        color: #222;
+        text-align: center;
+        padding: 20px;
+    }
+    h1 {
+        font-size: 2.5em;
+        color: #fff;
+        text-shadow: 2px 2px 5px #333;
+    }
+    .converter {
+        background: #fff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        display: inline-block;
+        margin-top: 20px;
+        max-width: 400px;
+        width: 100%;
+    }
+    select, input {
+        padding: 10px;
+        font-size: 1em;
+        margin: 10px 0;
+        width: 80%;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    .result, .explanation {
+        background: #f9f9f9;
+        padding: 10px;
+        margin-top: 15px;
+        border-radius: 8px;
+        font-size: 1.1em;
+        text-align: left;
+    }
+</style>
+</head>
+<body>
+
+<h1>🔥 Cool Conversion: Fahrenheit ➡ Celsius 🔥</h1>
+
+<div class="converter">
+    <h2>Select a Temperature</h2>
+    <select id="fahrenheitDropdown">
+        <option value="">--Choose Fahrenheit--</option>
+        <option>32</option>
+        <option>50</option>
+        <option>68</option>
+        <option>77</option>
+        <option>86</option>
+        <option>100</option>
+        <option>212</option>
+    </select>
+
+    <h2>Or Enter Manually</h2>
+    <input type="number" id="manualInput" step="0.1" placeholder="Enter °F">
+
+    <div class="result" id="result">Result: —</div>
+    <div class="explanation" id="explanation">
+        Explanation: Select or enter a temperature to see the calculation.
+    </div>
+</div>
+
+<script>
+    function fahrenheitToCelsius(f) {
+        return (f - 32) * (5/9);
+    }
+
+    function updateResult(fahrenheit) {
+        if (fahrenheit === "" || isNaN(fahrenheit)) {
+            document.getElementById("result").textContent = "Result: —";
+            document.getElementById("explanation").textContent = 
+                "Explanation: Select or enter a temperature to see the calculation.";
+            return;
+        }
+        let celsius = fahrenheitToCelsius(fahrenheit);
+        let roundedC = Math.round(celsius * 10) / 10;
+        document.getElementById("result").textContent = `Result: ${fahrenheit}°F = ${roundedC}°C`;
+        document.getElementById("explanation").textContent = 
+            `We start with ${fahrenheit}°F. Subtract 32: (${fahrenheit} - 32) = ${fahrenheit - 32}. 
+            Then multiply by 5/9: (${fahrenheit - 32} × 5/9) = ${roundedC}°C.`;
+    }
+
+    document.getElementById("fahrenheitDropdown").addEventListener("change", function() {
+        document.getElementById("manualInput").value = "";
+        updateResult(this.value);
+    });
+
+    document.getElementById("manualInput").addEventListener("input", function() {
+        document.getElementById("fahrenheitDropdown").value = "";
+        updateResult(this.value);
+    });
+</script>
+
+</body>
+</html>
