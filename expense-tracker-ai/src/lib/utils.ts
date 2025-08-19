@@ -89,14 +89,14 @@ export function calculateExpenseSummary(expenses: Expense[]): ExpenseSummary {
 }
 
 export function exportToCSV(expenses: Expense[]): string {
-  const headers = ['Date', 'Amount', 'Category', 'Description'];
+  const headers = ['Date', 'Category', 'Amount', 'Description'];
   const csvContent = [
     headers.join(','),
     ...expenses.map((expense) =>
       [
         expense.date,
-        expense.amount,
         expense.category,
+        expense.amount,
         `"${expense.description.replace(/"/g, '""')}"`,
       ].join(',')
     ),
