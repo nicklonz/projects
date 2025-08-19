@@ -2,22 +2,32 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Home, Plus, BarChart3 } from 'lucide-react';
+import { Home, Plus, BarChart3, Download } from 'lucide-react';
 import SummaryCards from '@/components/dashboard/SummaryCards';
 import RecentExpenses from '@/components/dashboard/RecentExpenses';
 import CategoryBreakdown from '@/components/dashboard/CategoryBreakdown';
+import ExportModal from '@/components/export/ExportModal';
 import { storageService } from '@/lib/storage';
 import { calculateExpenseSummary } from '@/lib/utils';
+import { exportExpenses } from '@/lib/exportUtils';
 import { Expense } from '@/types';
 
 export default function HomePage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   useEffect(() => {
     setExpenses(storageService.getExpenses());
   }, []);
 
   const summary = calculateExpenseSummary(expenses);
+
+  const handleExport = async (data: { expenses: Expense[], filters: { format: 'csv' | 'json' | 'pdf', filename: string } }) => {
+    await exportExpenses(data.expenses, {
+      format: data.filters.format,
+      filename: data.filters.filename
+    });
+  };
 
   return (
     <div className="space-y-8">
@@ -32,6 +42,13 @@ export default function HomePage() {
           </p>
         </div>
         <div className="flex space-x-3">
+          <button
+            onClick={() => setIsExportModalOpen(true)}
+            className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <Download className="h-4 w-4 mr-1" />
+            Export Data
+          </button>
           <Link
             href="/add"
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -80,6 +97,13 @@ export default function HomePage() {
           </Link>
         </div>
       )}
+
+      <ExportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        expenses={expenses}
+        onExport={handleExport}
+      />
     </div>
   );
 }
