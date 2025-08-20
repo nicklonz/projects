@@ -2,16 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Home, Plus, BarChart3 } from 'lucide-react';
+import { Home, Plus, BarChart3, Cloud } from 'lucide-react';
 import SummaryCards from '@/components/dashboard/SummaryCards';
 import RecentExpenses from '@/components/dashboard/RecentExpenses';
 import CategoryBreakdown from '@/components/dashboard/CategoryBreakdown';
+import CloudExportHub from '@/components/cloud-export/CloudExportHub';
 import { storageService } from '@/lib/storage';
 import { calculateExpenseSummary } from '@/lib/utils';
 import { Expense } from '@/types';
 
 export default function HomePage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [isCloudExportOpen, setIsCloudExportOpen] = useState(false);
 
   useEffect(() => {
     setExpenses(storageService.getExpenses());
@@ -32,6 +34,13 @@ export default function HomePage() {
           </p>
         </div>
         <div className="flex space-x-3">
+          <button
+            onClick={() => setIsCloudExportOpen(true)}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-md"
+          >
+            <Cloud className="h-4 w-4 mr-1" />
+            Export Hub
+          </button>
           <Link
             href="/add"
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -80,6 +89,12 @@ export default function HomePage() {
           </Link>
         </div>
       )}
+
+      <CloudExportHub
+        isOpen={isCloudExportOpen}
+        onClose={() => setIsCloudExportOpen(false)}
+        expenses={expenses}
+      />
     </div>
   );
 }
